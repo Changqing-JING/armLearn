@@ -38,11 +38,11 @@ namespace  MoveWideImmediate{
 
 template<class T>
 int emmitMoveImmediateValue(Aarch64Register reg, T value, uint32_t*& mc){
-    static_assert(std::is_same<T, uint32_t>::value || std::is_same<T, uint64_t>::value|| std::is_same<T, uint16_t>::value,
-                "only accept uint32 and uint64 in mov");
+    static_assert(std::is_same<T, uint32_t>::value || std::is_same<T, uint64_t>::value|| std::is_same<T, uint16_t>::value|| std::is_same<T, uint8_t>::value,
+                "only accept uint8 uint16 uint32 and uint64 in mov");
     MoveWideImmediate::SF sf;
 
-    if (sizeof(T)==4){
+    if (sizeof(T)<=4){
         sf = MoveWideImmediate::SF::bit32;
     }else{
         sf = MoveWideImmediate::SF::bit64;
