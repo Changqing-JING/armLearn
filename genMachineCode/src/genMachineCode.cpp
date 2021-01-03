@@ -17,11 +17,11 @@ namespace  MoveWideImmediate{
     
 
     
-    const uint8_t registerMask = 0b1'1111;
-    const uint32_t imm16Mask = 0b11111111'11111111'00000;
-    const uint8_t imm16Offset = 5;
-    const uint8_t hwOffset = imm16Offset + sizeof(uint16_t)*8;
-    const uint32_t opCode = 0b100101'00'00000000'00000000'00000;
+    static const uint8_t registerMask = 0b1'1111;
+    static const uint32_t imm16Mask = 0b11111111'11111111'00000;
+    static const uint8_t imm16Offset = 5;
+    static const uint8_t hwOffset = imm16Offset + sizeof(uint16_t)*8;
+    static const uint32_t opCode = 0b100101'00'00000000'00000000'00000;
 
     static inline void emmitMoveImmediateValue(Aarch64Register reg, uint16_t imm16, uint8_t hwBase, OPC opc, SF sf, uint32_t* instruction){
         *instruction = opCode;
