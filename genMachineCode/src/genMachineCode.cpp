@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include "Arrch64Register.h"
+#include <type_traits>
 
 namespace  MoveWideImmediate{
     enum SF{
@@ -35,22 +36,31 @@ namespace  MoveWideImmediate{
 };
 
 
+template<class T>
+int emmitMoveImmediateValue(Aarch64Register reg, T value, uint32_t*& mc){
+    static_assert(std::is_same<T, uint32_t>::value || std::is_same<T, uint64_t>::value|| std::is_same<T, uint16_t>::value,
+                "only accept uint32 and uint64 in mov");
+    MoveWideImmediate::SF sf;
 
-int emmitMoveImmediateValue64(Aarch64Register reg, uint64_t value, uint32_t*& mc){
+    if (sizeof(T)==4){
+        sf = MoveWideImmediate::SF::bit32;
+    }else{
+        sf = MoveWideImmediate::SF::bit64;
+    }
 
     if((~value)<=UINT16_MAX){
-        MoveWideImmediate::emmitMoveImmediateValue(reg, ~(value), 0, MoveWideImmediate::OPC::MOVN,  MoveWideImmediate::SF::bit64, mc);
+        MoveWideImmediate::emmitMoveImmediateValue(reg, ~(value), 0, MoveWideImmediate::OPC::MOVN,  sf, mc);
         mc++;
         return 0;
     }
     
-    MoveWideImmediate::emmitMoveImmediateValue(reg, value&UINT16_MAX, 0, MoveWideImmediate::OPC::MOVZ,  MoveWideImmediate::SF::bit64, mc);
+    MoveWideImmediate::emmitMoveImmediateValue(reg, value&UINT16_MAX, 0, MoveWideImmediate::OPC::MOVZ,  sf, mc);
     mc++;
     uint8_t hw = 1;
 
     while((value = value>>16)>0){
 
-        MoveWideImmediate::emmitMoveImmediateValue(reg, value&UINT16_MAX, hw, MoveWideImmediate::OPC::MOVK,  MoveWideImmediate::SF::bit64, mc);
+        MoveWideImmediate::emmitMoveImmediateValue(reg, value&UINT16_MAX, hw, MoveWideImmediate::OPC::MOVK,  sf, mc);
         hw++;
         mc++;
     }
@@ -64,8 +74,8 @@ int main(){
     uint32_t* machineCodeStart = (uint32_t*)malloc(1024);
     uint32_t* machineCode = machineCodeStart;
 
-    emmitMoveImmediateValue64(Aarch64Register::x5, 0x11223344556677LL, machineCode);
-    emmitMoveImmediateValue64(Aarch64Register::x6, -1, machineCode);
+    emmitMoveImmediateValue(Aarch64Register::x5, 0x11223344556677UL, machineCode);
+    emmitMoveImmediateValue(Aarch64Register::x6, (uint32_t)-1, machineCode);
     uint32_t machineCodeSize = (uintptr_t)machineCode - (uintptr_t)machineCodeStart;
     dumpDisassembly((uint8_t*)machineCodeStart, machineCodeSize);
 
