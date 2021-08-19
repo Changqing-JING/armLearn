@@ -14,9 +14,9 @@ lab_memset:
     sub sp, sp, 32 
     cmp x2, 32
     bge .32
-    mov x28, x30
+    str x30, [sp]
     bl byte_memset
-    mov x30, x28
+    ldr x30, [sp]
     b .20
     
 
