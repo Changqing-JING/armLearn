@@ -28,8 +28,8 @@ lab_memset:
     sub x6, x7, x5 //x6 = x7 - x5, x6 is unaligned size
 //-------------------------------------------
     //store local variables and prepare paramters
-    str x0, [sp]
-    str x2, [sp, 8]
+    str x0, [sp] //x0 is volatile register which need to be saved by caller
+    str x2, [sp, 8] // store x2 to sp + 8
 
     str x30, [sp, 16]
 
@@ -43,11 +43,13 @@ lab_memset:
 
     ldr x30, [sp, 16]
 //-------------------
-    add x0, x0, x6
-    sub x2, x2, x6
+    //calculate aligned address and rest size
+    add x0, x0, x6 //x0 = x0 + x6
+    sub x2, x2, x6 //x2 = x2 - x6
 
-    lsl x6, x1, 8
-    orr x6, x6, x1
+    //fill x6 with value of x1, for example: x1=0x10, then x6 = 0x1010101010101010
+    lsl x6, x1, 8 //x6 = x1 << 8
+    orr x6, x6, x1 //x6 = x6 | x1
     lsl x7, x6, 16
     orr x7, x7, x6
     lsl x6, x7, 32
@@ -55,12 +57,12 @@ lab_memset:
 
     1: //loop
     cmp x2, 16
-    blt .19
-    stp x6, x6, [x0], 16
+    blt .19 //jump if less
+    stp x6, x6, [x0], 16 //store x6 to memory address x0, store x6 to memory [x0+8], x0 = x0 + 16
     sub x2, x2, 16
     b 1b
 
-
+   //copy rest bytes
     .19:
     mov x28, x30
 
@@ -69,5 +71,6 @@ lab_memset:
     mov x30, x28
 
     .20: //end
+    //recovery stack
     add sp, sp, 32
-        ret
+    ret
