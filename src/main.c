@@ -6,7 +6,7 @@ int main(){
 
     char d[100];
 
-    lab_memset(&d, 10, 20);
+    lab_memset(&d, 10, 48);
     
     return 0;
 }
