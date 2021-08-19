@@ -1,8 +1,12 @@
-#include <stdio.h>
+#include <stdlib.h>
+
+void lab_memset(void* dist, int value, size_t size);
 
 int main(){
 
-    unsigned long long l = 0xFFFFFFFFF;
+    char d[100];
 
+    lab_memset(&d, 10, 20);
+    
     return 0;
 }

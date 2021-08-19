@@ -1,6 +1,0 @@
-set(genMachineCodeName genMachineCode)
-aux_source_directory(src sourceFiles)
-set(includeDirs include)
-add_executable(${genMachineCodeName} ${sourceFiles})
-target_include_directories(${genMachineCodeName} PUBLIC ${includeDirs})
-set_property(TARGET ${genMachineCodeName} PROPERTY CXX_STANDARD 20)

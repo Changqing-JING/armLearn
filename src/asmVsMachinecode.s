@@ -1,8 +1,6 @@
-	.arch armv8-a
-	.file	"asmVsMachinecode.s"
-	.text
+.global lab_memset
 
-foo:
+lab_memset:
 	.cfi_startproc
 	mov x0, #0
     movk x0, 0xffff, lsl 48
