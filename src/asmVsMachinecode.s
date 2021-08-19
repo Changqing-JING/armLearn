@@ -48,12 +48,9 @@ lab_memset:
     sub x2, x2, x6 //x2 = x2 - x6
 
     //fill x6 with value of x1, for example: x1=0x10, then x6 = 0x1010101010101010
-    lsl x6, x1, 8 //x6 = x1 << 8
-    orr x6, x6, x1 //x6 = x6 | x1
-    lsl x7, x6, 16
-    orr x7, x7, x6
-    lsl x6, x7, 32
-    orr x6, x6, x7
+    orr x6, x1, x1, lsl 8
+    orr x6, x6, x6, lsl 16
+    orr x6, x6, x6, lsl 32
 
     1: //loop
     cmp x2, 16
