@@ -11,7 +11,7 @@ byte_memset:
     ret
 
 lab_memset:
-    sub sp, sp, 32
+    sub sp, sp, 32 
     cmp x2, 32
     bge .32
     mov x28, x30
