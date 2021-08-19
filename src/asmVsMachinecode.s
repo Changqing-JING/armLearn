@@ -1,30 +1,33 @@
 .global lab_memset
-
+.global byte_memset //Let linker find this function
 byte_memset:
     1: //loop
-    cmp x2, 0
-    beq .byte_memset_end
-    strb w1, [x0], 1
-    sub x2, x2, 1
-    b 1b
+    cmp x2, 0 //compare x2 with 0
+    beq .byte_memset_end //conditional Jump: jump to a label if equal or greater, otherwise contienue
+    strb w1, [x0], 1 //store 1 byte value of w1 to memory address x1, then x0 = x0 + 1
+    sub x2, x2, 1 //x2 = x2 - 1
+    b 1b //unconditional jmp to label
     .byte_memset_end:
-    ret
+    ret //return
 
 lab_memset:
-    sub sp, sp, 32 
+    sub sp, sp, 32 //alloc 32 bytes stack, in arm64 stack grows downwards.
     cmp x2, 32
     bge .32
-    str x30, [sp]
-    bl byte_memset
-    ldr x30, [sp]
+    //still copy byte by byte if the size is very small
+    str x30, [sp] //save return address of current function to stack
+    bl byte_memset //jump to byte_memset and save return address of byte_memset to X30
+    ldr x30, [sp] //restore return address to X30
     b .20
-    
+ //------------------------   
 
     .32: //more_than_32
-    and x5, x0, 0xF
-    mov x7, 16
-    sub x6, x7, x5 //x6=aligned size
-
+    //calculate unaligned size
+    and x5, x0, 0xF //x5 = x0 & 0xF
+    mov x7, 16 //x7 = 16
+    sub x6, x7, x5 //x6 = x7 - x5, x6 is unaligned size
+//-------------------------------------------
+    //store local variables and prepare paramters
     str x0, [sp]
     str x2, [sp, 8]
 
@@ -34,11 +37,12 @@ lab_memset:
 
     bl byte_memset
 
+    //restore local variables
     ldr x0, [sp]
     ldr x2, [sp, 8]
 
     ldr x30, [sp, 16]
-
+//-------------------
     add x0, x0, x6
     sub x2, x2, x6
 
