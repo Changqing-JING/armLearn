@@ -51,8 +51,8 @@ lab_memset:
     //orr x6, x1, x1, lsl 8 // x6 = x1 | (x1<<8)
    // orr x6, x6, x6, lsl 16
     //orr x6, x6, x6, lsl 32
-    dup v0.8b, w1
-    fmov x6, d0
+    dup v0.8b, w1 //file each 8byte element in v0 with value in w1
+    fmov x6, d0 //copy d0 to x6
 
     1: //loop
     cmp x2, 16
