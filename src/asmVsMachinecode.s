@@ -48,7 +48,7 @@ lab_memset:
     sub x2, x2, x6 //x2 = x2 - x6
 
     //fill x6 with value of x1, for example: x1=0x10, then x6 = 0x1010101010101010
-    orr x6, x1, x1, lsl 8
+    orr x6, x1, x1, lsl 8 // x6 = x1 | (x1<<8)
     orr x6, x6, x6, lsl 16
     orr x6, x6, x6, lsl 32
 
@@ -61,11 +61,11 @@ lab_memset:
 
    //copy rest bytes
     .19:
-    mov x28, x30
+    str x30, [sp]
 
     bl byte_memset
 
-    mov x30, x28
+    ldr x30, [sp]
 
     .20: //end
     //recovery stack
