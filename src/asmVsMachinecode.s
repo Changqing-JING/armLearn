@@ -1,9 +1,9 @@
 .global lab_memset
-.global byte_memset //Let linker find this function
+.global byte_memset // Export this function. Let linker find it
 byte_memset:
     1: //loop
     cmp x2, 0 //compare x2 with 0
-    beq .byte_memset_end //conditional Jump: jump to a label if equal or greater, otherwise contienue
+    beq .byte_memset_end //conditional Jump/branch: jump to a label if equal or greater, otherwise continue
     strb w1, [x0], 1 //store 1 byte value of w1 to memory address x1, then x0 = x0 + 1
     sub x2, x2, 1 //x2 = x2 - 1
     b 1b //unconditional jmp to label
@@ -16,7 +16,7 @@ lab_memset:
     bge .32
     //still copy byte by byte if the size is very small
     str x30, [sp] //save return address of current function to stack
-    bl byte_memset //jump to byte_memset and save return address of byte_memset to X30
+    bl byte_memset //jump to label byte_memset and save return address of byte_memset to X30
     ldr x30, [sp] //restore return address to X30
     b .20
  //------------------------   
