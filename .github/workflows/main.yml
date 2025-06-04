@@ -43,5 +43,5 @@ jobs:
       - name: Build and run ruapu
         run: |
           cd ruapu
-          cl.exe /Fe:ruapu.exe main.c
-          ruapu.exe
+          cl.exe /Fe: ruapu.exe main.c
+          .\ruapu.exe
