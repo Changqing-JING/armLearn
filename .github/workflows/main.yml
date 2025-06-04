@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  Test-Ubuntu:
+    runs-on: [ubuntu-24.04-arm]
+
+    steps:
+      - name: cpuinfo
+        run: cat /proc/cpuinfo
+
+      - name: lscpu
+        run: lscpu
+  Test-Mac:
+    runs-on: [macos-latest]
+    steps:
+      - name: cpuinfo
+        run: sysctl -a
+
+      - name: hardware-info
+        run: system_profiler SPHardwareDataType
+
+  Test-Windows:
+    runs-on: [windows-11-arm]
+    steps:
+      - name: Win32_Processor
+        run: Get-WmiObject Win32_Processor
+
+      - name: system-info
+        run: Get-ComputerInfo | Format-List
+
+      - name: clone
+        run: |
+          git clone https://github.com/nihui/ruapu.git
+          cd ruapu
+          cl.exe /Fe: ruapu.exe main.c
+          ruapu.exe
