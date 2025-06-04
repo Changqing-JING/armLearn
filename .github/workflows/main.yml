@@ -36,5 +36,12 @@ jobs:
         run: |
           git clone https://github.com/nihui/ruapu.git
           cd ruapu
-          cl.exe /Fe: ruapu.exe main.c
+
+      - name: Setup Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build and run ruapu
+        run: |
+          cd ruapu
+          cl.exe /Fe:ruapu.exe main.c
           ruapu.exe
